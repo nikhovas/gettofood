@@ -1,0 +1,233 @@
+{
+  "dishes": [
+    {
+      "id": 1,
+      "name": "Шаурма классическая",
+      "price": 150,
+      "shopId": 1
+    },
+    {
+      "id": 2,
+      "name": "Шаурма с сыром",
+      "price": 160,
+      "shopId": 1
+    },
+    {
+      "id": 3,
+      "name": "Блин с беконом, сыром и яйцом",
+      "price": 140,
+      "shopId": 2
+    },
+    {
+      "name": "Шаурма ассорти",
+      "price": 180,
+      "shopId": 1,
+      "id": 4
+    }
+  ],
+  "basket": [
+    {
+      "shopId": 123421,
+      "shopName": "Формула шаурмы",
+      "area": "МФТИ",
+      "city": "Долгопрудный",
+      "totalPrice": 777,
+      "items": [
+        {
+          "id": 1,
+          "name": "Шаурма классическая",
+          "price": 150,
+          "count": 2
+        },
+        {
+          "id": 2,
+          "name": "Шаурма с сыром",
+          "price": 160,
+          "count": 1
+        }
+      ]
+    },
+    {
+      "shopId": 1234215,
+      "area": "МФТИ",
+      "city": "Долгопрудный",
+      "shopName": "Блинная",
+      "totalPrice": 777,
+      "items": [
+        {
+          "id": 8,
+          "name": "Шаурма классическая",
+          "price": 150,
+          "count": 2
+        },
+        {
+          "id": 9,
+          "name": "Шаурма с сыром",
+          "price": 160,
+          "count": 1
+        }
+      ]
+    }
+  ],
+  "history": {
+    "active": [
+      {
+        "shopId": 123421,
+        "area": "МФТИ",
+        "city": "Долгопрудный",
+        "shopName": "Блинная",
+        "totalPrice": 777,
+        "status": "ready",
+        "code": "HGE32",
+        "items": [
+          {
+            "id": 1,
+            "name": "Шаурма классическая",
+            "count": 2
+          },
+          {
+            "id": 2,
+            "name": "Шаурма с сыром",
+            "count": 1
+          }
+        ]
+      }
+    ],
+    "completed": [
+      {
+        "shopId": 123421,
+        "area": "МФТИ",
+        "city": "Долгопрудный",
+        "shopName": "Блинная",
+        "totalPrice": 777,
+        "status": "completed",
+        "code": "HGE31",
+        "items": [
+          {
+            "id": 1,
+            "name": "Шаурма классическая",
+            "count": 2
+          },
+          {
+            "id": 2,
+            "name": "Шаурма с сыром",
+            "count": 1
+          }
+        ]
+      },
+      {
+        "shopId": 123421,
+        "area": "МФТИ",
+        "city": "Долгопрудный",
+        "shopName": "Блинная",
+        "totalPrice": 777,
+        "status": "completed",
+        "code": "HGE31",
+        "items": [
+          {
+            "id": 1,
+            "name": "Шаурма классическая",
+            "count": 2
+          },
+          {
+            "id": 2,
+            "name": "Шаурма с сыром",
+            "count": 1
+          }
+        ]
+      }
+    ]
+  },
+  "orders": [
+    {
+      "id": 1,
+      "phone": "+77777777777",
+      "name": "Николай",
+      "totalPrice": 777,
+      "status": "ready",
+      "code": "HGE31",
+      "items": [
+        {
+          "id": 1,
+          "name": "Шаурма классическая",
+          "count": 2
+        },
+        {
+          "id": 2,
+          "name": "Шаурма с сыром",
+          "count": 1
+        }
+      ]
+    }
+  ],
+  "account": {
+    "name": "Имяhjk",
+    "surname": "Фамилия",
+    "phone": "+77777777777",
+    "email": "test@example.com"
+  },
+  "edit-basket": [
+    {
+      "id": 1,
+      "count": 2
+    },
+    {
+      "id": 2,
+      "count": 3
+    }
+  ],
+  "apply-order": [
+    {
+      "orderId": 123421,
+      "id": 1
+    },
+    {
+      "orderId": 1234215,
+      "id": 2
+    },
+    {
+      "orderId": 1234215,
+      "id": 3
+    },
+    {
+      "orderId": 123421,
+      "id": 4
+    },
+    {
+      "orderId": 1234215,
+      "id": 5
+    },
+    {
+      "orderId": 123421,
+      "id": 6
+    },
+    {
+      "orderId": 1234215,
+      "id": 7
+    }
+  ],
+  "shopsDatabase": {
+    "cities": [
+      {
+        "name": "Москва",
+        "id": 1
+      },
+      {
+        "name": "Долгопрудный",
+        "id": 2
+      }
+    ],
+    "shops": [
+      {
+        "name": "Формула Шаурмы",
+        "cityId": 2,
+        "id": 1
+      },
+      {
+        "name": "Блинная",
+        "cityId": 2,
+        "id": 2
+      }
+    ]
+  }
+}
