@@ -8,7 +8,7 @@ services:
     working_dir: /backend/
     command: sh entrypoint.sh
   frontend:
-    image: node:15.0.1
+    image: node:latest
     command: sh entrypoint.sh
     working_dir: /frontend
     volumes:
