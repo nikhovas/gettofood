@@ -27,9 +27,10 @@ function companyFetchError() {
 export function fetchCompany() {
   return async (dispatch: Dispatch) => {
       let dishes;
+      const loginStatus = JSON.parse(localStorage.getItem("loginStatus") || "{}")
       try {
         dispatch(companyFetch())
-        const response = await backend.get("/api/companies/" + localStorage.getItem("companyId"))
+        const response = await backend.get(dispatch, "/api/companies/" + loginStatus["companyId"])
         dishes = await response.json()
 
         dispatch(companyFetchSuccess(dishes))
@@ -46,7 +47,7 @@ export function updateCompany(fieldName: string, fieldValue: any, companyId: num
         let dishes;
         try {
           dispatch(companyFetch())
-          const response = await backend.patch("/api/companies/", {[fieldName]: fieldValue})
+          const response = await backend.patch(dispatch, "/api/companies/", {[fieldName]: fieldValue})
           dishes = await response.json()
           dispatch(companyFetchSuccess(dishes))
         } catch(err) {

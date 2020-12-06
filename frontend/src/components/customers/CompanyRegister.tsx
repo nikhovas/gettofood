@@ -1,9 +1,8 @@
 import React from "react";
-import {useSelector} from "react-redux";
-import Header from "../Header";
-import backend from "../../utils/backend";
-import {useForm} from "react-hook-form";
-import {useHistory} from "react-router-dom";
+import {useDispatch, useSelector} from "react-redux"
+import backend from "../../utils/backend"
+import {useForm} from "react-hook-form"
+import {useHistory} from "react-router-dom"
 
 
 interface IFormInput {
@@ -17,6 +16,7 @@ function CompanyRegister() {
 
     const { register, handleSubmit } = useForm<IFormInput>();
     const history = useHistory()
+    const dispatch = useDispatch();
 
     if (database.isLoading) {
         return <div>Loading...</div>
@@ -27,7 +27,7 @@ function CompanyRegister() {
     const cities = database.database.cities
 
     const onSubmit = async (data: IFormInput) => {
-        const response = await backend.post("/api/companies/", {
+        const response = await backend.post(dispatch, "/api/companies/", {
             name: data.name,
             city: data.city
         })
@@ -41,7 +41,6 @@ function CompanyRegister() {
 
     return (
         <>
-            <Header current='account' accountType="customer"/>
             <div className="Account">
                 <div className="account-info-grid"
                      style={{position: 'absolute', left: '50%', top: '50%', transform: 'translate(-50%, -50%)'}}>

@@ -43,7 +43,7 @@ export function fetchBasket() {
 
             dispatch(basketFetch())
             console.log("asdfds")
-            const response = await backend.get("/api/orders/?account-type=client&extend=shop")
+            const response = await backend.get(dispatch, "/api/orders/?account-type=client&extend=shop")
 
             console.log("fasdf")
             dishes = await response.json()
@@ -70,7 +70,7 @@ export function fetchCompanyBasket() {
     return async (dispatch: Dispatch) => {
         try {
             dispatch(basketFetch())
-            const response = await backend.get("/api/orders/?account-type=company&extend=client")
+            const response = await backend.get(dispatch, "/api/orders/?account-type=company&extend=client")
             let orders = await response.json();
             orders = orders.filter((elem: ClientOrder) => elem.status === "QD" || elem.status === "CG" || elem.status === "RY")
             dispatch(basketFetchSuccess(orders))
@@ -86,9 +86,26 @@ export function updateBasketElement(orderId: number, data: any) {
         try {
             const orders = getState().basket.orders
             dispatch(basketFetch())
-            const response = await backend.patch(`/api/orders/${orderId}?extend=client`, data)
+            const response = await backend.patch(dispatch, `/api/orders/${orderId}?extend=client`, data)
             const order = await response.json();
             dispatch(basketUpdate(order, orderId, orders))
+        } catch (err) {
+            dispatch(basketFetchError())
+        }
+    }
+}
+
+
+export function removeBasketElement(orderId: number, realDelete: boolean) {
+    return async (dispatch: Dispatch, getState: any) => {
+        try {
+            const orders = getState().basket.orders
+            dispatch(basketFetch())
+            if (realDelete) {
+                await backend.delete(dispatch, "/api/orders/" + orderId)
+            }
+            const newOrders = orders.filter((order: { id: number }) => order.id !== orderId)
+            dispatch(basketFetchSuccess(newOrders))
         } catch (err) {
             dispatch(basketFetchError())
         }

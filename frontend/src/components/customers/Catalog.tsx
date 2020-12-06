@@ -1,5 +1,4 @@
-import React, { useState } from "react";
-import Header from "../Header";
+import React, { useState } from "react"
 import {useDispatch, useSelector} from 'react-redux'
 import { fetchDishes } from "../../store/actions/dishes";
 import backend from '../../utils/backend'
@@ -7,9 +6,10 @@ import backend from '../../utils/backend'
 
 function Dish(props: any) {
     let dishData = props.dishData
+    const dispatch = useDispatch()
 
     async function onClick(event: any) {
-        await backend.post("/api/order-items/", {
+        await backend.post(dispatch, "/api/order-items/", {
             "dish_id": dishData.id,
             "count": 1
         })
@@ -99,7 +99,7 @@ const Catalog: React.FC = () => {
     const shopElements: any[] = uuu.database.database.shops.filter(elem => String(elem.city) === String(currentCity))
 
     return (
-        <><Header current='catalog'  accountType="customer" />
+        <>
             <div className="Catalog">
                 <div className="grid-container">
                     <div className="item3">

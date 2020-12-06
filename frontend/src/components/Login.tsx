@@ -33,23 +33,18 @@ export default function Login({logout}: Props) {
         dispatch(logoutAction())
     }
 
-    async function login(useCompany: boolean) {
-        dispatch(customerLogin(state.username, state.password, useCompany))
-        if (loginStatus.accountType === "none") {
-            return
-        }
-        if (useCompany) {
-            hist.push("/dishes");
-        } else {
-            hist.push("/catalog");
-        }
-
+    async function login(event: any, useCompany: boolean) {
+        event.preventDefault()
+        await dispatch(customerLogin(state.username, state.password, useCompany))
+        console.log("CHECKPOINT 2")
+        console.log(loginStatus.accountType)
+        hist.push("")
     }
 
     return (
         <div className="middle-login-page"
              style={{position: 'absolute', left: '50%', top: '50%', transform: 'translate(-50%, -50%)'}}>
-            <form className="inner-login-page" onSubmit={() => login(false)}
+            <form className="inner-login-page" onSubmit={(event) => login(event, false)}
                   style={{fontSize: '14pt', marginBottom: '10px', width: "600px", height: "350px"}} >
                 <h1>GetToFood</h1>
                 <h3>Электронная почта</h3>
@@ -62,7 +57,7 @@ export default function Login({logout}: Props) {
                 <Link to="/register/customer">
                     Регистрация
                 </Link>
-                <button type="button" onClick={() => login(true)}>Войти как компания</button>
+                <button type="button" onClick={(event) => login(event, true)}>Войти как компания</button>
             </form>
         </div>
     );

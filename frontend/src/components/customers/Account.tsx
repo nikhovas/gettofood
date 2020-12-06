@@ -1,7 +1,6 @@
 import React from "react";
 import {useDispatch, useSelector} from 'react-redux'
-import { changePasswordAccount, fetchAccount, updateAccount } from "../../store/actions/account";
-import Header from "../Header";
+import { changePasswordAccount, fetchAccount, updateAccount } from "../../store/actions/account"
 
 
 interface AccountDataFieldData {
@@ -104,11 +103,11 @@ class AccountDataPasswordField extends React.Component<AccountDataPasswordFieldP
                 <form className="account-edit-block" onSubmit={this.handleSubmit.bind(this)}>
                     <h2 className="account-label" >Поменять пароль</h2>
                     <div className="account-label">Старый пароль</div>
-                    <input className="account-text-input" type="text" onChange={this.handleOldChange.bind(this)}/>
+                    <input className="account-text-input" type="password" onChange={this.handleOldChange.bind(this)}/>
                     <div className="account-label">Новый пароль</div>
-                    <input className="account-text-input" type="text" onChange={this.handleNewChange.bind(this)}/>
+                    <input className="account-text-input" type="password" onChange={this.handleNewChange.bind(this)}/>
                     <div className="account-label">Повторите пароль</div>
-                    <input className="account-text-input" type="text" onChange={this.handleNewRepeatChange.bind(this)}/>
+                    <input className="account-text-input" type="password" onChange={this.handleNewRepeatChange.bind(this)}/>
                     <div className="inline-account-grid">
                         <button type="submit" className="default-button"><span className="fa fa-check"></span></button>
                         <button className="default-button"><span className="fa fa-times"></span></button>
@@ -137,7 +136,6 @@ function Account() {
     }
     return (
         <>
-            <Header current='account' accountType="customer" />
             <div className="Account">
                 <div className="account-info-grid">
                     <div style={{fontSize: '14pt', marginBottom: '10px'}}>

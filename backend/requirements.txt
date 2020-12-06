@@ -5,3 +5,5 @@ djoser
 django-rest_auth
 django-cors-headers
 django-allauth
+gunicorn
+psycopg2-binary

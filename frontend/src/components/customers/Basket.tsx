@@ -1,8 +1,7 @@
-import React from "react"
+import React, {useState} from "react"
 import {useDispatch, useSelector} from 'react-redux'
-import { fetchBasket } from "../../store/actions/basket";
+import {fetchBasket, removeBasketElement} from "../../store/actions/basket";
 import backend from "../../utils/backend";
-import Header from "../Header";
 
 
 interface OrderItemData {
@@ -22,60 +21,44 @@ interface OrderItemProperties {
 }
 
 
-class OrderItem extends React.Component<OrderItemProperties> {
-    onCountChange: (itemId: number, count: number) => void
+function OrderItem(props: OrderItemProperties) {
+    const onCountChange = props.onCountChange
+    const [state] = useState<OrderItemData>(props.orderItemData)
+    const dispatch = useDispatch()
 
-    state: {
-        count: number
-        id: number
-        dish: {
-            name: string
-            price: number
-            id: number
-        }
+    const deleteItem = async function() {
+        onCountChange(state.id, 0)
     }
 
-    constructor(props: OrderItemProperties) {
-        super(props);
-        this.state = props.orderItemData
-        this.onCountChange = props.onCountChange
-    }
+    const plusItem = async function(count: number) {
+        state.count += count;
 
-    async plusItem(count: number) {
-        this.state.count += count;
-
-        if (this.state.count <= 0) {
-            return await this.deleteItem();
+        if (state.count <= 0) {
+            return await deleteItem();
         }
 
-        await backend.patch("/api/order-items/" + this.state.id, {
-            "count": this.state.count
+        await backend.patch(dispatch, "/api/order-items/" + state.id, {
+            "count": state.count
         })
 
-        this.onCountChange(this.state.id, this.state.count)
+        onCountChange(state.id, state.count)
     }
 
-    async deleteItem() {
-        this.onCountChange(this.state.id, 0)
-    }
-
-    render() {
-        return (
-            <div className="basket-item" id={"basket-item-" + this.state.dish.id}>
-                <div className="item-txt">{this.state.dish.name}</div>
-                <button className="count-button" style={{ gridArea: 'button1', alignSelf: 'start' }} onClick={this.plusItem.bind(this, 1)}>
-                    <span className="fa fa-plus"></span>
-                </button>
-                <button className="count-button" style={{ gridArea: 'button2', alignSelf: 'start' }} id={"basket-item-number-" + this.state.dish.id}>{this.state.count}</button>
-                <button className="count-button" style={{ gridArea: 'button3' }} onClick={this.plusItem.bind(this, -1)}>
-                    <span className="fa fa-minus"></span>
-                </button>
-                <button className="count-button" style={{ gridArea: 'button4' }} onClick={this.deleteItem.bind(this)}>
-                    <span className="fa fa-trash"></span>
-                </button>
-            </div>
-        )
-    }
+    return (
+        <div className="basket-item" id={"basket-item-" + state.dish.id}>
+            <div className="item-txt">{state.dish.name}</div>
+            <button className="count-button" style={{ gridArea: 'button1', alignSelf: 'start' }} onClick={() => plusItem(1)}>
+                <span className="fa fa-plus"></span>
+            </button>
+            <button className="count-button" style={{ gridArea: 'button2', alignSelf: 'start' }} id={"basket-item-number-" + state.dish.id}>{state.count}</button>
+            <button className="count-button" style={{ gridArea: 'button3' }} onClick={() => plusItem(-1)}>
+                <span className="fa fa-minus"></span>
+            </button>
+            <button className="count-button" style={{ gridArea: 'button4' }} onClick={deleteItem}>
+                <span className="fa fa-trash"></span>
+            </button>
+        </div>
+    )
 }
 
 
@@ -97,26 +80,19 @@ interface ShopOrderData {
 
 interface ShopOrderProperties {
     shopOrder: ClientOrder
-    onDelete: (shopId: number) => void
+    onDelete: (shopId: number, realDelete: boolean) => void
 }
 
 
-class ShopOrder extends React.Component<ShopOrderProperties> {
-    state: ShopOrderData
-    onDelete: () => void
+function ShopOrder(props: ShopOrderProperties) {
+    const [state, setState] = useState<ShopOrderData>(props.shopOrder)
+    const onDelete = props.onDelete
+    const dispatch = useDispatch()
 
-    constructor(props: ShopOrderProperties) {
-        super(props);
-        this.state = props.shopOrder
-        this.onDelete = props.onDelete.bind(this, this.state.id)
-        console.log("ooo")
-        console.log(this.state)
-    }
-
-    async countChangeHandler(orderItemId: number, count: number) {
+    const countChangeHandler = async function (orderItemId: number, count: number) {
         const items: OrderItemData[] = [];
 
-        for (let i of this.state.order_items) {
+        for (let i of state.order_items) {
             if (i.id !== orderItemId) {
                 items.push(i)
             } else if (count !== 0) {
@@ -126,126 +102,77 @@ class ShopOrder extends React.Component<ShopOrderProperties> {
         }
 
         if (items.length === 0) {
-            this.onDelete();
+            onDelete(state.id, true);
         } else if (count === 0) {
-            await backend.delete("/api/order-items/" + orderItemId)
+            await backend.delete(dispatch, "/api/order-items/" + orderItemId)
         }
-        this.setState({ order_items: items })
+        setState({city: state.city, id: state.id, shop: state.shop, shopName: state.shopName, order_items: items })
     }
 
-    async applyOrder() {
-        await fetch(localStorage.getItem('backend_url') + "/api/orders/" + this.state.id, {
-            method: "PATCH",
-            headers: {
-                "Content-Type": "Application/json",
-                "Authorization": "Bearer " + String(localStorage.getItem("token"))
-            },
-            body: JSON.stringify({
-                "status": "QD"
-            }),
-        });
-        this.onDelete();
-    }
-
-    render() {
-        let totalPrice = 0;
-        for (let i of this.state.order_items) {
-            totalPrice += i.dish.price * i.count
-        }
-        return (
-            <div className="shop-item" style={{ marginTop: '40px' }}>
-                <div style={{ fontSize: '14pt', marginBottom: '10px' }} className="shop-order-description">
-                    <div className="left">{this.state.shop.name}</div>
-                    <div className="right">
-                        <span className="fa fa-trash" onClick={this.onDelete}/>
-                    </div>
-                    <div className="right">
-                        <span className="fa fa-shopping-basket" onClick={this.applyOrder.bind(this)}/>
-                    </div>
-                    <div className="right">{totalPrice}р</div>
-                </div>
-                <div className="simple-elements">
-                    {this.state.order_items.map((elem: any) => (
-                        <OrderItem orderItemData={elem} onCountChange={this.countChangeHandler.bind(this)} key={elem.id}/>
-                    ))}
-                </div>
-            </div>
-        )
-    }
-}
-
-
-interface BasketOrdersData {
-    orders: ClientOrder[]
-}
-
-
-interface BasketInternalProperties {
-    orders: ClientOrder[]
-}
-
-
-class BasketInternal extends React.Component<BasketInternalProperties> {
-    state: BasketOrdersData
-
-    constructor(props: BasketInternalProperties) {
-        super(props);
-        this.state = {
-            orders: props.orders
-        }
-        
-    }
-
-    async childDeleteHandler(orderId: number) {
-        await fetch(localStorage.getItem('backend_url') + "/api/orders/" + orderId, {
-            method: "DELETE",
-            headers: {
-                "Content-Type": "Application/json",
-                "Authorization": "Bearer " + String(localStorage.getItem("token"))
-            }
+    const applyOrder = async function() {
+        await backend.patch(dispatch, "/api/orders/" + state.id, {
+            "status": "QD"
         })
-
-        const items = this.state.orders.filter(order => order.id !== orderId);
-        this.state.orders = items
-
-        this.setState({ items: items });
+        onDelete(state.id, false);
     }
 
-    render() {
-        return (
-            <><Header current='basket' accountType="customer" />
-                <div className="Basket">
-                    <div className="main">
-                        {this.state.orders.map((elem) => (
-                            <ShopOrder shopOrder={elem} onDelete={this.childDeleteHandler.bind(this)} key={elem.id}/>
-                        ))}
-                    </div>
+    let totalPrice = 0;
+    for (let i of state.order_items) {
+        totalPrice += i.dish.price * i.count
+    }
+
+    return (
+        <div className="shop-item" style={{ marginTop: '40px' }}>
+            <div style={{ fontSize: '14pt', marginBottom: '10px' }} className="shop-order-description">
+                <div className="left">{state.shop.name}</div>
+                <div className="right">
+                    <span className="fa fa-trash" onClick={() => onDelete(state.id, true)}/>
                 </div>
-            </>
-        )
-    }
+                <div className="right">
+                    <span className="fa fa-shopping-basket" onClick={applyOrder}/>
+                </div>
+                <div className="right">{totalPrice}р</div>
+            </div>
+            <div className="simple-elements">
+                {state.order_items.map((elem: any) => (
+                    <OrderItem orderItemData={elem} onCountChange={countChangeHandler} key={elem.id}/>
+                ))}
+            </div>
+        </div>
+    )
 }
 
 
-function Basket(props: ShopOrderProperties) {
+function Basket() {
     document.title = "Корзина"
 
     const dispatch = useDispatch()
-        const basket = useSelector((state: State) => state.basket)
+    const basket = useSelector((state: State) => state.basket)
+    let orders = basket.orders.filter(elem => elem['status'] === 'BT')
 
-        React.useEffect(() => {
-            dispatch(fetchBasket())
-        }, [dispatch]);
+    const childDeleteHandler = async function(orderId: number, realDelete: boolean = true) {
+        dispatch(removeBasketElement(orderId, realDelete))
+    }
 
-        if (basket.isLoading) {
-            return <div className="loader">Loading...</div>
-        }
+    React.useEffect(() => {
+        dispatch(fetchBasket())
+    }, [dispatch]);
 
-        let orders = basket.orders.filter(elem => elem['status'] === 'BT')
-        
-        return (
-            <BasketInternal orders={orders}/>
-        )
+    if (basket.isLoading) {
+        return <div className="loader">Loading...</div>
+    }
+
+    return (
+        <>
+            <div className="Basket">
+                <div className="main">
+                    {orders.map((elem) => (
+                        <ShopOrder shopOrder={elem} onDelete={childDeleteHandler} key={elem.id}/>
+                    ))}
+                </div>
+            </div>
+        </>
+    )
 }
 
 

@@ -1,7 +1,6 @@
-import React, { useState } from "react";
+import React, { useState } from "react"
 import {useDispatch, useSelector} from 'react-redux'
-import { fetchCompany, updateCompany } from "../../store/actions/company";
-import Header from "../Header";
+import { fetchCompany, updateCompany } from "../../store/actions/company"
 
 
 interface AccountDataFieldData {
@@ -108,7 +107,6 @@ function Company() {
 
         return (
             <>
-                <Header current='account' accountType="company" />
                 <div className="Account">
                     <div className="account-info-grid">
                         <div style={{fontSize: '14pt', marginBottom: '10px'}}>

@@ -21,6 +21,7 @@ function customerLoginFetch() {
   }
 
   function customerLoginFetchError() {
+    console.log("CHECKPOINT HERE")
     return {
       type: LOGIN_FETCH_ERROR,
     }
@@ -48,7 +49,7 @@ export function customerLogin(login: string, password: string, useCompany: boole
     return async (dispatch: Dispatch) => {
         try {
             dispatch(customerLoginFetch())
-            const response = await backend.post("/api/token/", {
+            const response = await backend.post(dispatch, "/api/token/", {
                 email: login,
                 password: password
             }, false)

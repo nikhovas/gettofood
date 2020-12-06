@@ -31,7 +31,7 @@ export function fetchAccount() {
 
       try {
         dispatch(accountFetch())
-        const response = await backend.get("/api/account/")
+        const response = await backend.get(dispatch, "/api/account/")
         dishes = await response.json()
         dispatch(accountFetchSuccess(dishes))
       } catch(err) {
@@ -46,7 +46,7 @@ export function updateAccount(fieldName: string, fieldValue: any) {
       let dishes;
       try {
         dispatch(accountFetch())
-        const response = await backend.patch("/api/account/", {[fieldName]: fieldValue})
+        const response = await backend.patch(dispatch, "/api/account/", {[fieldName]: fieldValue})
         dishes = await response.json()
         dispatch(accountFetchSuccess(dishes))
       } catch(err) {
@@ -73,7 +73,7 @@ export function changePasswordAccount(oldPassword: string, newPassword: string) 
     let dishes;
     try {
       dispatch(accountFetch())
-      const response = await backend.patch("/api/change-password/", {old_password: oldPassword, new_password: newPassword})
+      const response = await backend.patch(dispatch, "/api/change-password/", {old_password: oldPassword, new_password: newPassword})
       dishes = await response.json()
       dispatch(accountFetchSuccess(dishes))
     } catch(err) {

@@ -2,6 +2,7 @@ import React from "react";
 import { useHistory } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import backend from "../utils/backend";
+import {useDispatch} from "react-redux";
 
 
 interface IFormInput {
@@ -17,13 +18,13 @@ interface IFormInput {
 export function CustomerRegister() {
   const { register, handleSubmit } = useForm<IFormInput>();
     const history = useHistory()
-
+    const dispatch = useDispatch()
 
     const onSubmit = async (data: IFormInput) => {
         if (data.password !== data.repeatPassword) {
             alert("Пароли не совпадают")
         }
-        const response = await backend.post("/account/", {
+        const response = await backend.post(dispatch, "/api/register/", {
             name: data.name,
             surname: data.surname,
             email: data.email,

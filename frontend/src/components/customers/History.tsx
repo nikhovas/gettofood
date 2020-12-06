@@ -1,7 +1,6 @@
-import React from "react";
-import Header from "../Header";
+import React from "react"
 import {useDispatch, useSelector} from 'react-redux'
-import { fetchBasket } from "../../store/actions/basket";
+import { fetchBasket } from "../../store/actions/basket"
 
 
 interface OrderItemData {
@@ -121,7 +120,7 @@ function History() {
       let completed = basket.orders.filter(elem => elem['status'] === 'OK' || elem['status'] === 'CD')
 
     return (
-        <><Header current='history'  accountType="customer" />
+        <>
             <div className="Basket">
                 <div className="main">
                     <OrderSet data={active}/>

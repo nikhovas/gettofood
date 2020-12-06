@@ -31,7 +31,7 @@ export function fetchDatabase() {
       try {
         dispatch(databaseFetch())
         // const response = await backend.get("/api/shops-database")
-        const response = await backend.get("/api/shops-database", false)
+        const response = await backend.get(dispatch, "/api/shops-database", false)
         // const response = await fetch(localStorage.getItem('backend_url') + "/api/shops-database", {
         //   headers: {
         //     "Content-Type": "Application/json",

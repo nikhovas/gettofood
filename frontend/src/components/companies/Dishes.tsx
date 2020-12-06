@@ -1,9 +1,8 @@
-import React, { useState } from "react";
-import Header from "../Header";
+import React, { useState } from "react"
 import {useDispatch, useSelector} from 'react-redux'
-import { fetchDishes } from "../../store/actions/dishes";
-import { useHistory } from "react-router-dom";
-import backend from "../../utils/backend";
+import { fetchDishes } from "../../store/actions/dishes"
+import { useHistory } from "react-router-dom"
+import backend from "../../utils/backend"
 
 
 function Dish(props: any) {
@@ -11,7 +10,8 @@ function Dish(props: any) {
     const [editStatus, setEditStatus] = useState(false)
     const [dishName, setDishName] = useState(props.dishData.name)
     const [dishPrice, setDishPrice] = useState(props.dishData.price)
-    const history = useHistory();
+    const history = useHistory()
+    const dispatch = useDispatch()
 
     async function handleNameChange(event: any) {
         setDishName(String(event.target.value))
@@ -28,7 +28,7 @@ function Dish(props: any) {
 
     async function onSaveClick(event: any) {
         event.preventDefault()
-        await backend.patch("/api/dishes/" + props.dishData.id, {
+        await backend.patch(dispatch, "/api/dishes/" + props.dishData.id, {
             "name": dishName,
             "price": dishPrice
         })
@@ -38,7 +38,7 @@ function Dish(props: any) {
 
     async function onDeleteClick(event: any) {
         event.preventDefault()
-        await backend.delete("/api/dishes/" + props.dishData.id)
+        await backend.delete(dispatch, "/api/dishes/" + props.dishData.id)
         history.go(0);
     }
     
@@ -68,6 +68,7 @@ function DishAdd(props: DishAddProps) {
     const [dishName, setDishName] = useState("")
     const [dishPrice, setDishPrice] = useState(0)
     const history = useHistory();
+    const dispatch = useDispatch()
 
     async function handleNameChange(event: any) {
         setDishName(String(event.target.value))
@@ -79,7 +80,7 @@ function DishAdd(props: DishAddProps) {
 
     async function onAddClick(event: any) {
         event.preventDefault()
-        await backend.post("/api/dishes/", {
+        await backend.post(dispatch, "/api/dishes/", {
             "name": dishName,
             "price": dishPrice
         })
@@ -109,7 +110,7 @@ const Dishes: React.FC = () => {
     }
 
     return (
-        <><Header current='dishes' accountType="company" />
+        <>
             <div className="Catalog">
                 <div className="company-dishes-grid-container">
                     <div className="item3">

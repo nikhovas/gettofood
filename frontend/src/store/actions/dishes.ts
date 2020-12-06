@@ -33,7 +33,7 @@ export function fetchDishes(shopId: number) {
       try {
 
         dispatch(dishesFetch())
-        const response = await backend.get("/api/dishes/?shop=" + shopId)
+        const response = await backend.get(dispatch, "/api/dishes/?shop=" + shopId)
         dishes = await response.json()
 
         dispatch(dishesFetchSuccess(dishes, shopId))
@@ -52,7 +52,7 @@ export function fetchCompanyDishes() {
       try {
         dispatch(dishesFetch())
         console.log("asdfds")
-        const response = await backend.get("/api/dishes?account-type=company")
+        const response = await backend.get(dispatch, "/api/dishes?account-type=company")
         console.log("fasdf")
         dishes = await response.json()
 

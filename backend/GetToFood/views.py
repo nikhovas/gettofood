@@ -123,27 +123,6 @@ class OrderView(CreateAPIView, ListAPIView):
 
         return JsonResponse(serializer.data, safe=False)
 
-    # @check_client_or_company
-    # def patch(self, request, company_info: Optional[CompanyField], pk):
-    #     status_value = request.data.get('status')
-    #
-    #     if company_info is None:
-    #         if status_value is not None and status_value != "QD":
-    #             return Response(status=status.HTTP_400_BAD_REQUEST)
-    #     else:
-    #         if status_value is not None and status_value == "QD":
-    #             return Response(status=status.HTTP_400_BAD_REQUEST)
-    #
-    #     if len(request.data) != 1:
-    #         return Response(status=status.HTTP_400_BAD_REQUEST)
-    #
-    #     order = self.get_object()
-    #     serializer = self.serializer_class(order, data={'status': status_value}, partial=True)
-    #     if serializer.is_valid():
-    #         serializer.save()
-    #         return JsonResponse(data=serializer.data)
-    #     return JsonResponse(code=400, data="wrong parameters")
-
     def patch(self, request, pk):
         status_value = request.data.get('status')
         order = self.get_object()
@@ -298,52 +277,11 @@ class OrderItemView(APIView):
         order_item = get_object_or_404(OrderItem.objects.all(), pk=pk)
         if order_item.order.status != Order.StatusChoices.Basket or order_item.order.client != request.user:
             return Response(status=status.HTTP_400_BAD_REQUEST)
+        order = order_item.order
         order_item.delete()
+        if len(order.order_items) == 0:
+            order.delete()
         return Response(status=204)
-
-
-# class AccountView(APIView):
-#     def get(self, request):
-#         ser = ClientUserSerializer(client_user)
-#         return JsonResponse(ser.data)
-#
-#     @client_only
-#     def patch(self, client_user: ClientUser, request):
-#         serializer = ClientUserSerializer(client_user, data=request.data, partial=True)
-#         if serializer.is_valid(raise_exception=True):
-#             serializer.save()
-#             return JsonResponse(data=serializer.data)
-#         return Response(status=400)
-
-
-# class ChangePasswordView(UpdateAPIView):
-#     """
-#     An endpoint for changing password.
-#     """
-#     serializer_class = ChangePasswordSerializer
-#     model = CustomUser
-#     permission_classes = (IsAuthenticated,)
-#
-#     def get_object(self, queryset=None):
-#         obj = self.request.user
-#         return obj
-#
-#     def update(self, request, *args, **kwargs):
-#         self.object = self.get_object()
-#         serializer = self.get_serializer(data=request.data)
-#
-#         if serializer.is_valid():
-#             # Check old password
-#             if not self.object.check_password(serializer.data.get("old_password")):
-#                 return Response({"old_password": ["Wrong password."]}, status=status.HTTP_400_BAD_REQUEST)
-#             # set_password also hashes the password that the user will get
-#             self.object.set_password(serializer.data.get("new_password"))
-#             self.object.save()
-#
-#             ser = UserSerializer(self.object)
-#             return JsonResponse(data=ser.data)
-#
-#         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 class ChangePasswordView(APIView):

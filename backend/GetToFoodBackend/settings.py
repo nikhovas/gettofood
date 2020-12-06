@@ -9,6 +9,7 @@ https://docs.djangoproject.com/en/3.1/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.1/ref/settings/
 """
+import os
 from datetime import timedelta
 from pathlib import Path
 
@@ -25,7 +26,7 @@ SECRET_KEY = 'x=%%hjfg(mm-p4n4rv8*s(yh_ec6h5+($60*2-r@*1*j1cnk%1'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['api']
+ALLOWED_HOSTS = ['api', 'localhost', '127.0.0.1']
 
 
 # Application definition
@@ -93,7 +94,15 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': BASE_DIR / 'db.sqlite3',
-    }
+    },
+    # "default": {
+    #     'ENGINE': 'django.db.backends.postgresql',
+    #     'NAME': 'gettofood',
+    #     'USER': 'gettofood',
+    #     'PASSWORD': 'gettofood',
+    #     'HOST': 'postgres',
+    #     'PORT': "5432"
+    # }
 }
 
 

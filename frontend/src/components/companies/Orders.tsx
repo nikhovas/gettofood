@@ -1,5 +1,4 @@
 import React from "react";
-import Header from "../Header";
 import {useDispatch, useSelector} from 'react-redux'
 import { fetchCompanyBasket, updateBasketElement } from "../../store/actions/basket";
 
@@ -88,7 +87,7 @@ function Orders() {
     }
 
     return (
-        <><Header current='orders' accountType="company" />
+        <>
             <div className="Basket">
                 <div className="main">
                 {orders.orders.map(elem => (
