@@ -176,7 +176,6 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
         company = CompanyField.objects.filter(user=self.user).first()
         data['company'] = company is not None
         data['accountId'] = self.user.pk
-        company = CompanyField.objects.filter(user=self.user).first()
         if company is not None:
             data['companyId'] = company.pk
         data['account'] = CustomUserDetailsSerializer(self.user).data

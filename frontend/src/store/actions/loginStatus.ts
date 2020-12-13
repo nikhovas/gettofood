@@ -33,16 +33,8 @@ function customerLoginFetch() {
     }
   }
 
-  function customerLoginFetchSuccess(token: string, refresh: string, companyAllow: boolean, accountId: number, accountType: string, companyId: number) {
-    return {
-        type: LOGIN_FETCH_SUCCESS,
-        token: token,
-        refresh: refresh,
-        companyAllow: companyAllow,
-        accountId: accountId,
-        accountType: accountType,
-        companyId: companyId
-      }
+ function customerLoginFetchSuccess(data: {token: string, refresh: string, companyAllow: boolean, accountId: number, accountType: string, companyId: number}) {
+    return {...data, type: LOGIN_FETCH_SUCCESS}
   }
 
 export function customerLogin(login: string, password: string, useCompany: boolean) {
@@ -63,12 +55,26 @@ export function customerLogin(login: string, password: string, useCompany: boole
             let data = await response.json()
             if (useCompany) {
                 if (data['company'] === true) {
-                    dispatch(customerLoginFetchSuccess(data["access"], data["refresh"], data["company"], data["accountId"], "company", data["companyId"]))
+                    dispatch(customerLoginFetchSuccess({
+                        token: data["access"],
+                        refresh: data["refresh"],
+                        companyAllow: data["company"],
+                        accountId: data["accountId"],
+                        accountType: "company",
+                        companyId: data["companyId"]
+                    }))
                 } else {
                     dispatch(customerLoginFetchError())
                 }
             } else {
-                dispatch(customerLoginFetchSuccess(data["access"], data["refresh"], data["company"], data["accountId"], "customer", data["companyId"]))
+                dispatch(customerLoginFetchSuccess({
+                        token: data["access"],
+                        refresh: data["refresh"],
+                        companyAllow: data["company"],
+                        accountId: data["accountId"],
+                        accountType: "customer",
+                        companyId: data["companyId"]
+                    }))
             }
         } catch(err) {
           dispatch(customerLoginFetchError())
