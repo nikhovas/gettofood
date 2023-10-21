@@ -4,6 +4,6 @@ djangorestframework_simplejwt
 djoser
 django-rest_auth
 django-cors-headers
-django-allauth
+django-allauth==0.54.0
 gunicorn
 psycopg2-binary
